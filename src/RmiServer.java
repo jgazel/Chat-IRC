@@ -39,6 +39,7 @@ implements ReceiveMessageInterface
 		
 	@Override
 	public int getId() throws RemoteException {
+		System.out.print("A client ask for connection...");
 		int id=0;
 		Vector<Integer> listeId = new Vector<Integer>();
 		for (User user : allUsers){
@@ -53,6 +54,7 @@ implements ReceiveMessageInterface
 				trouve = true;
 			}
 		}
+		System.out.println(" give id::" + id + " done");
 		return id;
 	}	
 		

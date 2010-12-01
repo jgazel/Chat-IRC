@@ -10,6 +10,11 @@ public class RmiClient implements RmiConnectInterface
 	static public String serverPort;
 	static public String text;
 	static public Registry registry = null;
+	
+	/** Id donné par le serveur */
+	protected int id;
+	/** Login choisi par le client */
+	protected String login = new String("Default");
 
 
 	public void connect(String serverAddress, String serverPort)
@@ -29,7 +34,7 @@ public class RmiClient implements RmiConnectInterface
 		try{
 			rmiServer=
 				(ReceiveMessageInterface)(registry.lookup("rmiServer"));
-			rmiServer.receiveMessage(text);
+			id = rmiServer.getId();
 		}
 		catch(RemoteException e){
 			e.printStackTrace();
@@ -51,7 +56,7 @@ public class RmiClient implements RmiConnectInterface
 
 			rmiServer=
 				(ReceiveMessageInterface)(registry.lookup("rmiServer"));
-			rmiServer.receiveMessage(text);
+			rmiServer.receiveMessage(id,text);
 		}
 		catch(RemoteException e){
 			e.printStackTrace();

@@ -10,8 +10,19 @@ implements ReceiveMessageInterface
 	int      thisPort;
 	String   thisAddress;
 	Registry registry; 
-	private Vector<String> allMessages = new Vector<String>();
-	// Définition classe privée pour les utilisateurs
+	
+	
+	/** Classe permettant de représenter les messages	 */
+		private class Message{
+			protected int id;
+			protected String text = new String("");
+			public Message(int id, String text) {this.id = id;	this.text = text;	}
+			public int getId() {return id;}		public void setId(int id) {	this.id = id;	}
+			public String getText() {return text;}		public void setText(String text) {this.text = text;	}	
+		}
+	private Vector<Message> allMessages = new Vector<Message>();
+		public Vector<Message> getAllMessages() {return allMessages;} 	public void addMessage(int id,String text) {this.allMessages.add(new Message(id, text));}
+
 	/** Classe permettant de représenter les utilisateurs	 */
 		private class User{
 			protected int id;
@@ -22,7 +33,6 @@ implements ReceiveMessageInterface
 			public int getId() {return id;}		public void setId(int id) {this.id = id;}
 			public String getLogin() {return login;}		public void setLogin(String login) {this.login = login;}
 		}
-	// Fin définition classe user
 	protected Vector<User> allUsers = new Vector<User>();
 		public Vector<User> getAllUsers() {return allUsers;}	public void addUser(User user) {this.allUsers.add(user);}
 	
@@ -51,10 +61,10 @@ implements ReceiveMessageInterface
 	 * Reçoit les messages des Clients et les traite
 	 * @param x Message envoyé par l'un des clients
 	 */
-	public void receiveMessage(String x) throws RemoteException
+	public void receiveMessage(int id, String x) throws RemoteException
 	{
-		allMessages.add(x);
-		System.out.println(allUsers.size() + " " + x);
+		addMessage(id, x);
+		System.out.println(id + " " + x);
 	}
 
 	

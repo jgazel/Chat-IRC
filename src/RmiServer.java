@@ -16,6 +16,7 @@ implements ReceiveMessageInterface
 		private class Message{
 			protected int id;
 			protected String text = new String("");
+			public Message(){};
 			public Message(int id, String text) {this.id = id;	this.text = text;	}
 			public int getId() {return id;}		public void setId(int id) {	this.id = id;	}
 			public String getText() {return text;}		public void setText(String text) {this.text = text;	}	
@@ -34,7 +35,7 @@ implements ReceiveMessageInterface
 			public int getId() {return id;}		public void setId(int id) {this.id = id;}
 			public String getLogin() {return login;}		public void setLogin(String login) {this.login = login;}
 
-			public String toString() {return "<" + login + ">";	}
+			public String toString() {return "<" + login + "> ";	}
 			
 		}
 	protected Vector<User> allUsers = new Vector<User>();
@@ -51,7 +52,7 @@ implements ReceiveMessageInterface
 		
 	@Override
 	public int getId() throws RemoteException {
-		System.out.print("A client ask for connection...");
+		System.out.print("# client asks for connection...");
 		int id=0;
 		Vector<Integer> listeId = new Vector<Integer>();
 		for (User user : allUsers){
@@ -71,7 +72,34 @@ implements ReceiveMessageInterface
 		return id;
 	}	
 		
+	/** Donne tous les messages depuis la dernière mise à jour */
+	public Vector<String> getLastMessages(int id, int index){
+		Vector<String> lastMessages= new Vector<String>();
+		Message msg = new Message();
+		for (int i=id+1; i<allMessages.size();i++){
+			msg = allMessages.get(i);
+			if (msg.getId() != id) lastMessages.add(getUser(msg.getId()) + msg.getText());
+		}
+		return lastMessages;
+	}
+	
+	/** Donne le dernire index de message arrivé sur le server*/
+	@Override
+	public 	int getLastIndex() throws RemoteException{
+		return (allMessages.size()-1);
+	}
+	
+	@Override
+	public void changeLogin(int id, String login) throws RemoteException {
+		for (User u: allUsers){
+			if (u.getId()==id){
+				u.setLogin(login);
+			}
+		}
 		
+	}
+	
+	
 	/**
 	 * Reçoit les messages des Clients et les traite
 	 * @param x Message envoyé par l'un des clients
@@ -119,6 +147,8 @@ implements ReceiveMessageInterface
 			System.exit(1);
 		}
 	}
+
+
 
 
 }

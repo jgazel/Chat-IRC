@@ -14,16 +14,34 @@ public class RmiClient implements RmiConnectInterface
 
 	public void connect(String serverAddress, String serverPort)
 	throws RemoteException {
+		// Se connecte au registre
 		RmiClient.serverAddress = serverAddress;
 		RmiClient.serverPort = serverPort;
-		System.out.println("Connexion à "+serverAddress+":"+serverPort);
+		System.out.print("Connexion à "+serverAddress+":"+serverPort+ "...");
 		registry=LocateRegistry.getRegistry(
 				serverAddress,
 				(new Integer(serverPort)).intValue()
 		);
+		System.out.println(" done");
+		
+		// Demande une identification
+		ReceiveMessageInterface rmiServer;
+		try{
+			rmiServer=
+				(ReceiveMessageInterface)(registry.lookup("rmiServer"));
+			rmiServer.receiveMessage(text);
+		}
+		catch(RemoteException e){
+			e.printStackTrace();
+		}
+		catch(NotBoundException e){
+			e.printStackTrace();
+		}
+		
 
 	}
 
+	
 	public void send(String text)
 	{
 		//TODO Condition if afficher connecter vous d'abord si registry=null
@@ -90,5 +108,6 @@ public class RmiClient implements RmiConnectInterface
 			System.exit(1);
 		}
 	}
+
 
 }

@@ -26,8 +26,9 @@ implements ReceiveMessageInterface
 	/** Classe permettant de représenter les utilisateurs	 */
 		private class User{
 			protected int id;
-			protected String login;
+			protected String login=new String();
 			
+			public User(){};
 			public User(int id, String login) {this.id = id;	this.login = login;}
 	
 			public int getId() {return id;}		public void setId(int id) {this.id = id;}
@@ -35,7 +36,15 @@ implements ReceiveMessageInterface
 		}
 	protected Vector<User> allUsers = new Vector<User>();
 		public Vector<User> getAllUsers() {return allUsers;}	public void addUser(User user) {this.allUsers.add(user);}
-	
+
+		
+	public User getUser(int id){
+		User user=null;
+		for (User u : allUsers){
+			if (u.getId()==id) user = u;
+		}
+		return user;
+	}
 		
 	@Override
 	public int getId() throws RemoteException {
@@ -51,6 +60,7 @@ implements ReceiveMessageInterface
 			if (listeId.contains(id)){
 				id++;
 			}else {
+				allUsers.add(new User(id, "<"+ "id"+ ">"));
 				trouve = true;
 			}
 		}

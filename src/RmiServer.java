@@ -33,6 +33,9 @@ implements ReceiveMessageInterface
 	
 			public int getId() {return id;}		public void setId(int id) {this.id = id;}
 			public String getLogin() {return login;}		public void setLogin(String login) {this.login = login;}
+
+			public String toString() {return "<" + login + ">";	}
+			
 		}
 	protected Vector<User> allUsers = new Vector<User>();
 		public Vector<User> getAllUsers() {return allUsers;}	public void addUser(User user) {this.allUsers.add(user);}
@@ -60,7 +63,7 @@ implements ReceiveMessageInterface
 			if (listeId.contains(id)){
 				id++;
 			}else {
-				allUsers.add(new User(id, "<"+ "id"+ ">"));
+				allUsers.add(new User(id, "DefaultLogin"+id));
 				trouve = true;
 			}
 		}
@@ -76,7 +79,7 @@ implements ReceiveMessageInterface
 	public void receiveMessage(int id, String x) throws RemoteException
 	{
 		addMessage(id, x);
-		System.out.println(id + " " + x);
+		System.out.println(getUser(id).toString() + " " + x);
 	}
 
 	

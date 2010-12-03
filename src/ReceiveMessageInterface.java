@@ -8,5 +8,7 @@ public interface ReceiveMessageInterface extends Remote
 	void changeLogin(int id, String login) throws RemoteException;
 	Vector<String> getLastMessages(int id,int index) throws RemoteException;
 	int getLastIndex() throws RemoteException;
+	Vector<String> getAllUsersConnected(int id)throws RemoteException;
+	int userDisconnection(int id) throws RemoteException;
 }
 

@@ -55,11 +55,14 @@ public class RmiClient implements RmiConnectInterface
 		
 		System.out.println(". done");
 	}
-
-	public Vector<String> getLastMessages() throws RemoteException {
+	/**
+	 * Récupère les messages non lus sur le serveur
+	 * @return un vecteur des chaines de caractères des messages
+	 * @throws RemoteException
+	 */
+	public void getLastMessages() throws RemoteException {
 		ReceiveMessageInterface rmiServer;
 		Vector<String> messages=null;
-		System.out.print("#...");
 		try{
 
 			rmiServer=
@@ -78,8 +81,33 @@ public class RmiClient implements RmiConnectInterface
 		catch(NotBoundException e){
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Récupère les utilisateurs connectés sur le serveur
+	 */
+	public Vector<String> getAllConnectedUsers() {
+		ReceiveMessageInterface rmiServer;
+		Vector<String> users=null;
+		try{
 
-		return messages;
+			rmiServer=
+				(ReceiveMessageInterface)(registry.lookup("rmiServer"));
+			// Récupère les messages des autres aucune autres infos n'est accessible
+			users = rmiServer.getAllUsersConnected(id);
+			for (String user : users){
+				System.out.println(user);
+			}
+		}
+		catch(RemoteException e){
+			e.printStackTrace();
+		}
+		catch(NotBoundException e){
+			e.printStackTrace();
+		}
+
+		return users;
+		
 	}
 	
 	public void send(String text)
@@ -115,16 +143,19 @@ public class RmiClient implements RmiConnectInterface
 			Console console = System.console();
 			if (console != null){
 				Boolean exit = false;
+				String str = new String(""); // Read the console
+				StringTokenizer st = null; // Split the line
+				String keyWord = null;; // Will be the first word
+				
 				while(!exit){
-					String str = console.readLine();
+					str = console.readLine();
 					while (str.equals("")){
 						str = console.readLine();
 					}	
-					
-
+			
 					// Traitement de la ligne rentrée dans la console
-					StringTokenizer st = new StringTokenizer(str, " ");
-					String keyWord = st.nextToken();
+					st = new StringTokenizer(str, " ");
+					keyWord = st.nextToken();
 
 					if (keyWord.equals("connect")){
 						String serverA = new String();
@@ -146,8 +177,9 @@ public class RmiClient implements RmiConnectInterface
 						}
 						c.send(message);
 					}else if(keyWord.equals("get")){
-						// TODO à décaler dans un thread à part.. ou pas
 						c.getLastMessages();
+					}else if(keyWord.equals("who")){
+						c.getAllConnectedUsers();
 					}else if(keyWord.equals("exit")){
 						exit = true;
 						c.exit();
@@ -163,6 +195,8 @@ public class RmiClient implements RmiConnectInterface
 			System.exit(1);
 		}
 	}
+
+
 
 
 }

@@ -71,12 +71,27 @@ implements ReceiveMessageInterface
 		System.out.println(" give id::" + id + " done");
 		return id;
 	}	
+	
+	@Override
+	public int userDisconnection(int id) throws RemoteException {
+		System.out.print("# client " + id + "asks for disconnection...");
+		// Récupère l'utilisateur associé à l'id*
+		User user = null;
+		for (User u : allUsers){
+			if (u.getId() == id) user= u;
+		}
+		// Suppression. Les autres ne changent pas d'id.
+		allUsers.remove(user);
 		
-	/** Donne tous les messages depuis la dernière mise à jour */
+		return id;
+	}	
+		
+	/** Donne tous les messages depuis la dernière mise à jour. Le fait de passer que des chaines de caractères est volontaire, par sécurité*/
 	public Vector<String> getLastMessages(int id, int index){
 		Vector<String> lastMessages= new Vector<String>();
 		Message msg = new Message();
-		for (int i=id+1; i<allMessages.size();i++){
+		System.out.println("#" + getUser(msg.getId()) + "gets its messages from index:"+ (index+1) + " to " + (allMessages.size()-1));
+		for (int i=index+1; i<allMessages.size();i++){
 			msg = allMessages.get(i);
 			if (msg.getId() != id) lastMessages.add(getUser(msg.getId()) + msg.getText());
 		}
@@ -89,6 +104,15 @@ implements ReceiveMessageInterface
 		return (allMessages.size()-1);
 	}
 	
+	
+	@Override
+	public 	Vector<String> getAllUsersConnected(int id) throws RemoteException{
+		Vector<String> users = new Vector<String>();
+		for (User u : allUsers){
+			if (u.getId()!=id) users.add(u.getLogin());
+		}
+		return users;
+	}
 	
 	
 	

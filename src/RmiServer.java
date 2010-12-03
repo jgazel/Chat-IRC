@@ -83,11 +83,14 @@ implements ReceiveMessageInterface
 		return lastMessages;
 	}
 	
-	/** Donne le dernire index de message arrivé sur le server*/
+	/** Donne le dernier index de message arrivé sur le server*/
 	@Override
 	public 	int getLastIndex() throws RemoteException{
 		return (allMessages.size()-1);
 	}
+	
+	
+	
 	
 	@Override
 	public void changeLogin(int id, String login) throws RemoteException {

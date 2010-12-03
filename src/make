@@ -1,0 +1,4 @@
+javac RmiClient.java
+javac RmiServer.java
+rmic RmiServer
+

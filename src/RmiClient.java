@@ -59,7 +59,7 @@ public class RmiClient implements RmiConnectInterface
 	public Vector<String> getLastMessages() throws RemoteException {
 		ReceiveMessageInterface rmiServer;
 		Vector<String> messages=null;
-		System.out.println("#Ask for messages...");
+		System.out.print("#...");
 		try{
 
 			rmiServer=
@@ -102,6 +102,11 @@ public class RmiClient implements RmiConnectInterface
 		}
 	}
 
+	public void exit()
+	{
+		registry = null;
+	}
+	
 	static public void main(String args[])
 	{
 		try{
@@ -114,9 +119,8 @@ public class RmiClient implements RmiConnectInterface
 					String str = console.readLine();
 					while (str.equals("")){
 						str = console.readLine();
-						// TODO à décaler dans un thread à part.. ou pas
-						c.getLastMessages();
-					}
+					}	
+					
 
 					// Traitement de la ligne rentrée dans la console
 					StringTokenizer st = new StringTokenizer(str, " ");
@@ -141,9 +145,12 @@ public class RmiClient implements RmiConnectInterface
 							message = message + " " + st.nextToken();
 						}
 						c.send(message);
+					}else if(keyWord.equals("get")){
+						// TODO à décaler dans un thread à part.. ou pas
+						c.getLastMessages();
 					}else if(keyWord.equals("exit")){
 						exit = true;
-						registry = null;
+						c.exit();
 					}
 					
 

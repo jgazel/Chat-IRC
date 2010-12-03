@@ -14,6 +14,8 @@ public class RmiClient implements RmiConnectInterface
 	
 	/** Id donné par le serveur */
 	protected int id;
+
+
 	/** Login choisi par le client */
 	protected String login = new String("Default");
 	/** Indice du dernier message reçu */
@@ -132,14 +134,26 @@ public class RmiClient implements RmiConnectInterface
 
 	public void exit()
 	{
-		registry = null;
+		ReceiveMessageInterface rmiServer;
+		try{
+
+			rmiServer=
+				(ReceiveMessageInterface)(registry.lookup("rmiServer"));
+			rmiServer.userDisconnection(id);
+		}
+		catch(RemoteException e){
+			e.printStackTrace();
+		}
+		catch(NotBoundException e){
+			e.printStackTrace();
+		}
 	}
 	
 	static public void main(String args[])
 	{
 		try{
 			RmiClient c=new RmiClient();
-
+			Thread getMessage = new GetMessage(c);
 			Console console = System.console();
 			if (console != null){
 				Boolean exit = false;
@@ -158,6 +172,7 @@ public class RmiClient implements RmiConnectInterface
 					keyWord = st.nextToken();
 
 					if (keyWord.equals("connect")){
+						getMessage.start();
 						String serverA = new String();
 						String serverP = new String();
 						String login = new String();
@@ -182,6 +197,7 @@ public class RmiClient implements RmiConnectInterface
 						c.getAllConnectedUsers();
 					}else if(keyWord.equals("exit")){
 						exit = true;
+						getMessage.wait();
 						c.exit();
 					}
 					
@@ -196,7 +212,15 @@ public class RmiClient implements RmiConnectInterface
 		}
 	}
 
-
+	public int getId() {
+		return id;
+	}
+	public int getIndex() {
+		return index;
+	}
+	public void setIndex(int index) {
+		this.index = index;
+	}
 
 
 }

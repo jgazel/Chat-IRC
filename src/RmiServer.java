@@ -90,7 +90,7 @@ implements ReceiveMessageInterface
 	public Vector<String> getLastMessages(int id, int index){
 		Vector<String> lastMessages= new Vector<String>();
 		Message msg = new Message();
-		System.out.println("#" + getUser(msg.getId()) + "gets its messages from index:"+ (index+1) + " to " + (allMessages.size()-1));
+		//System.out.println("#" + getUser(msg.getId()) + "gets its messages from index:"+ (index+1) + " to " + (allMessages.size()-1));
 		for (int i=index+1; i<allMessages.size();i++){
 			msg = allMessages.get(i);
 			if (msg.getId() != id) lastMessages.add(getUser(msg.getId()) + msg.getText());
